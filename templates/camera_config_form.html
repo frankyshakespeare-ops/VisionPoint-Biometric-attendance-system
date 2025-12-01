@@ -1,168 +1,399 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ config.name|default:"Create Camera Configuration" }}</title>
+{% extends 'base.html' %}
+{% load static %}
 
-    <!-- Google Fonts for nice typography -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+{% block title %}{{ config.name|default:"Create Camera Configuration" }}{% endblock %}
 
-    <!-- CSS for styling the form -->
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #000000; /* Black background */
-            color: #FFD700; /* Yellow text */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .form-container {
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 30px;
-            width: 100%;
-            max-width: 400px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-            position: relative;
-            z-index: 1;
-        }
-
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 2rem;
-            letter-spacing: 1px;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
-            color: #FFD700; /* Yellow text */
-        }
-
-        .alert {
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            background-color: rgba(255, 255, 0, 0.2); /* Light yellow background for alerts */
-            color: #FFD700; /* Yellow text */
-        }
-
-        label {
-            font-weight: 600;
-            margin-bottom: 10px;
-            display: block;
-            color: #FFD700; /* Yellow text */
-        }
-
-        input[type="text"], input[type="number"] {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            font-size: 1rem;
-            background-color: rgba(255, 255, 255, 0.8);
-            color: #333;
-            transition: box-shadow 0.3s ease;
-        }
-
-        input:focus {
-            box-shadow: 0 0 5px rgba(255, 215, 0, 0.8); /* Yellow shadow on focus */
-            outline: none;
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            background-color: #FFD700; /* Yellow button */
-            border: none;
-            border-radius: 5px;
-            font-size: 1.2rem;
-            color: #000; /* Black text for contrast */
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #FFC107; /* Darker yellow on hover */
-        }
-
-        /* New button styles for Back to List and Back to Home */
-        .nav-button {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 8px 12px;
-            background-color: #FFD700;
-            color: #000;
-            border: none;
-            border-radius: 5px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.3s ease, transform 0.3s ease;
-        }
-
-        .nav-button:hover {
-            background-color: #FFC107;
-            transform: scale(1.05);
-        }
-
-        a {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-            color: #FFD700;
-            text-decoration: none;
-            font-size: 1rem;
-            font-weight: 500;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 600px) {
-            .form-container {
-                padding: 20px;
-                width: 90%;
-            }
-            h1 {
-                font-size: 1.8rem;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="form-container">
-        <h1>{{ config.name|default:"Create Camera Configuration" }}</h1>
-        
-        <!-- Display messages here -->
-        {% for message in messages %}
-            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
-                {{ message }}
-            </div>
-        {% endfor %}
-        
-        <form method="POST">
-            {% csrf_token %}
-            
-            <label for="name">Camera Name:</label>
-            <input type="text" id="name" name="name" value="{{ config.name|default:'' }}" placeholder="Enter camera name" required>
-            
-            <label for="camera_source">Camera Source:</label>
-            <input type="text" id="camera_source" name="camera_source" value="{{ config.camera_source|default:'' }}" placeholder="Enter 0 for default or IP camera URL (e.g., http://10.129.101.122:4747/video)" required>
-            
-            <label for="threshold">Threshold:</label>
-            <input type="number" step="0.01" id="threshold" name="threshold" value="{{ config.threshold|default:0.6 }}" placeholder="Enter threshold value (0.0 to 1.0)" required>
-            <button type="submit">Save</button>
-        </form>
-        
-        <button class="nav-button" onclick="location.href='{% url 'camera_config_list' %}'">Back to List</button>
-        <button class="nav-button" onclick="location.href='{% url 'home' %}'">Back to Home</button>
+{% block content %}
+<div class="max-w-3xl mx-auto">
+    <!-- En-tête avec fil d'Ariane -->
+    <div class="mb-8">
+        <div class="flex items-center text-sm text-gray-500 mb-2">
+            <a href="{% url 'home' %}" class="hover:text-[#233853] transition-colors">
+                <i class="fas fa-home mr-1"></i> Home
+            </a>
+            <i class="fas fa-chevron-right mx-2 text-xs"></i>
+            <a href="{% url 'camera_config_list' %}" class="hover:text-[#233853] transition-colors">Cameras</a>
+            <i class="fas fa-chevron-right mx-2 text-xs"></i>
+            <span class="text-[#233853] font-medium">{% if config %}Edit{% else %}Create{% endif %}</span>
+        </div>
+        <h1 class="text-3xl font-bold text-gray-800">
+            {% if config %}
+                Edit Camera Configuration
+            {% else %}
+                Create Camera Configuration
+            {% endif %}
+        </h1>
+        <p class="text-gray-600 mt-2">
+            {% if config %}
+                Modifiez les paramètres de votre caméra
+            {% else %}
+                Configurez une nouvelle caméra pour la reconnaissance faciale
+            {% endif %}
+        </p>
     </div>
-</body>
-</html>
+
+    <!-- Carte du formulaire -->
+    <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+        <!-- En-tête de la carte -->
+        <div class="bg-gradient-to-r from-[#233853] to-[#2c4464] px-8 py-6">
+            <div class="flex items-center">
+                <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                    <i class="fas fa-video text-white text-2xl"></i>
+                </div>
+                <div class="ml-4">
+                    <h2 class="text-xl font-semibold text-white">Camera Configuration</h2>
+                    <p class="text-white/80 text-sm mt-1">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Tous les champs sont obligatoires
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Corps du formulaire -->
+        <div class="p-8">
+            <!-- Messages d'alerte -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="mb-6 p-4 rounded-lg {% if message.tags == 'error' %}bg-red-50 border-l-4 border-red-500 text-red-700{% elif message.tags == 'success' %}bg-green-50 border-l-4 border-green-500 text-green-700{% else %}bg-yellow-50 border-l-4 border-yellow-500 text-yellow-700{% endif %} flex items-start">
+                        <i class="fas {% if message.tags == 'error' %}fa-exclamation-circle{% elif message.tags == 'success' %}fa-check-circle{% else %}fa-info-circle{% endif %} mr-3 mt-0.5"></i>
+                        <div>{{ message }}</div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST" id="cameraForm" class="space-y-8">
+                {% csrf_token %}
+                
+                <!-- Champ Nom de la caméra -->
+                <div class="space-y-2">
+                    <label for="name" class="block text-sm font-semibold text-gray-700">
+                        <i class="fas fa-tag text-[#233853] mr-2"></i>
+                        Camera Name
+                        <span class="text-red-500 ml-1">*</span>
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-camera text-gray-400"></i>
+                        </div>
+                        <input type="text" 
+                               id="name" 
+                               name="name" 
+                               value="{{ config.name|default:'' }}" 
+                               placeholder="e.g., Main Entrance Camera"
+                               required
+                               class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:border-[#233853] focus:ring-2 focus:ring-[#233853]/20 outline-none transition-all duration-200">
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">Donnez un nom descriptif à votre caméra</p>
+                </div>
+
+                <!-- Champ Source de la caméra -->
+                <div class="space-y-2">
+                    <label for="camera_source" class="block text-sm font-semibold text-gray-700">
+                        <i class="fas fa-link text-[#233853] mr-2"></i>
+                        Camera Source
+                        <span class="text-red-500 ml-1">*</span>
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-globe text-gray-400"></i>
+                        </div>
+                        <input type="text" 
+                               id="camera_source" 
+                               name="camera_source" 
+                               value="{{ config.camera_source|default:'' }}" 
+                               placeholder="0 for webcam or http://192.168.1.100:8080/video"
+                               required
+                               class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:border-[#233853] focus:ring-2 focus:ring-[#233853]/20 outline-none transition-all duration-200">
+                    </div>
+                    
+                    <!-- Options rapides de source -->
+                    <div class="flex flex-wrap gap-2 mt-3">
+                        <button type="button" 
+                                onclick="setCameraSource('0')"
+                                class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-gray-200 transition-colors duration-200 flex items-center">
+                            <i class="fas fa-laptop mr-1"></i>
+                            Default Webcam (0)
+                        </button>
+                        <button type="button" 
+                                onclick="setCameraSource('1')"
+                                class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-gray-200 transition-colors duration-200 flex items-center">
+                            <i class="fas fa-laptop mr-1"></i>
+                            Secondary Webcam (1)
+                        </button>
+                        <button type="button" 
+                                onclick="setCameraSource('http://192.168.1.100:8080/video')"
+                                class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-gray-200 transition-colors duration-200 flex items-center">
+                            <i class="fas fa-wifi mr-1"></i>
+                            IP Camera
+                        </button>
+                    </div>
+                    
+                    <p class="text-xs text-gray-500 mt-1">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Utilisez "0" pour la webcam par défaut, ou une URL IP pour les caméras réseau
+                    </p>
+                </div>
+
+                <!-- Champ Threshold (Seuil) -->
+                <div class="space-y-2">
+                    <label for="threshold" class="block text-sm font-semibold text-gray-700">
+                        <i class="fas fa-sliders-h text-[#233853] mr-2"></i>
+                        Recognition Threshold
+                        <span class="text-red-500 ml-1">*</span>
+                    </label>
+                    
+                    <div class="flex items-center space-x-4">
+                        <div class="flex-1 relative">
+                            <input type="range" 
+                                   id="threshold_range" 
+                                   min="0.0" 
+                                   max="1.0" 
+                                   step="0.01" 
+                                   value="{{ config.threshold|default:0.6 }}"
+                                   class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                                   oninput="updateThreshold(this.value)">
+                            <div class="flex justify-between text-xs text-gray-500 px-1 mt-1">
+                                <span>0.0 (Lenient)</span>
+                                <span>0.5</span>
+                                <span>1.0 (Strict)</span>
+                            </div>
+                        </div>
+                        
+                        <div class="w-24">
+                            <input type="number" 
+                                   id="threshold" 
+                                   name="threshold" 
+                                   step="0.01" 
+                                   min="0.0" 
+                                   max="1.0" 
+                                   value="{{ config.threshold|default:0.6 }}" 
+                                   required
+                                   oninput="updateThresholdRange(this.value)"
+                                   class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-[#233853] focus:ring-2 focus:ring-[#233853]/20 outline-none transition-all duration-200 text-center">
+                        </div>
+                    </div>
+                    
+                    <div id="thresholdInfo" class="mt-3 p-3 bg-blue-50 rounded-lg text-sm text-blue-700">
+                        <i class="fas fa-lightbulb mr-2"></i>
+                        <span>Seuil recommandé : 0.6 pour un bon équilibre précision/rappel</span>
+                    </div>
+                </div>
+
+                <!-- Boutons d'action -->
+                <div class="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-100">
+                    <button type="submit" 
+                            class="flex-1 bg-[#233853] text-white px-6 py-4 rounded-xl font-medium hover:bg-[#2c4464] transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl">
+                        <i class="fas fa-save"></i>
+                        <span>Save Configuration</span>
+                    </button>
+                    
+                    <button type="button" 
+                            onclick="testCamera()"
+                            class="flex-1 bg-green-500 text-white px-6 py-4 rounded-xl font-medium hover:bg-green-600 transition-all duration-200 flex items-center justify-center space-x-2">
+                        <i class="fas fa-play"></i>
+                        <span>Test Camera</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Navigation supplémentaire -->
+    <div class="mt-6 flex items-center justify-between">
+        <a href="{% url 'camera_config_list' %}" 
+           class="text-gray-600 hover:text-[#233853] transition-colors flex items-center">
+            <i class="fas fa-arrow-left mr-2"></i>
+            Back to List
+        </a>
+        
+        <a href="{% url 'home' %}" 
+           class="text-gray-600 hover:text-[#233853] transition-colors flex items-center">
+            <i class="fas fa-home mr-2"></i>
+            Back to Home
+        </a>
+    </div>
+</div>
+
+<!-- Modal de test de caméra -->
+<div id="cameraTestModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full z-50">
+    <div class="relative top-20 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-xl bg-white">
+        <div class="mt-3">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">
+                    <i class="fas fa-camera-test text-[#233853] mr-2"></i>
+                    Camera Test
+                </h3>
+                <button onclick="closeTestModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="mt-2">
+                <!-- Zone de test vidéo -->
+                <div class="bg-gray-900 rounded-lg overflow-hidden aspect-video mb-4">
+                    <video id="testVideo" class="w-full h-full object-cover" autoplay></video>
+                </div>
+                
+                <!-- Statut du test -->
+                <div id="testStatus" class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 bg-gray-400 rounded-full mr-2"></div>
+                        <span class="text-sm text-gray-600">Waiting to test...</span>
+                    </div>
+                    <button onclick="startCameraTest()" 
+                            class="bg-[#233853] text-white px-4 py-2 rounded-lg hover:bg-[#2c4464] transition-colors duration-200 text-sm">
+                        <i class="fas fa-play mr-1"></i>
+                        Start Test
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts pour les fonctionnalités interactives -->
+<script>
+// Mettre à jour le champ number quand le range change
+function updateThreshold(value) {
+    document.getElementById('threshold').value = value;
+    updateThresholdInfo(value);
+}
+
+// Mettre à jour le range quand le champ number change
+function updateThresholdRange(value) {
+    document.getElementById('threshold_range').value = value;
+    updateThresholdInfo(value);
+}
+
+// Mettre à jour les informations selon le seuil
+function updateThresholdInfo(value) {
+    const info = document.getElementById('thresholdInfo');
+    value = parseFloat(value);
+    
+    if (value < 0.3) {
+        info.innerHTML = '<i class="fas fa-exclamation-triangle mr-2"></i>Seuil très bas : risque de faux positifs élevé';
+        info.className = 'mt-3 p-3 bg-yellow-50 rounded-lg text-sm text-yellow-700';
+    } else if (value > 0.8) {
+        info.innerHTML = '<i class="fas fa-exclamation-triangle mr-2"></i>Seuil très haut : risque de non-reconnaissance fréquent';
+        info.className = 'mt-3 p-3 bg-yellow-50 rounded-lg text-sm text-yellow-700';
+    } else {
+        info.innerHTML = '<i class="fas fa-lightbulb mr-2"></i>Seuil optimal pour la plupart des cas';
+        info.className = 'mt-3 p-3 bg-green-50 rounded-lg text-sm text-green-700';
+    }
+}
+
+// Définir la source de la caméra
+function setCameraSource(source) {
+    document.getElementById('camera_source').value = source;
+    
+    // Animation de confirmation
+    const input = document.getElementById('camera_source');
+    input.style.backgroundColor = '#e8f0fe';
+    setTimeout(() => {
+        input.style.backgroundColor = '';
+    }, 300);
+}
+
+// Test de caméra
+let testStream = null;
+
+function testCamera() {
+    const modal = document.getElementById('cameraTestModal');
+    modal.classList.remove('hidden');
+}
+
+function startCameraTest() {
+    const source = document.getElementById('camera_source').value;
+    const status = document.getElementById('testStatus');
+    const video = document.getElementById('testVideo');
+    
+    status.innerHTML = '<div class="flex items-center"><div class="w-3 h-3 bg-yellow-500 rounded-full animate-pulse mr-2"></div><span class="text-sm text-gray-600">Connecting...</span></div>';
+    
+    // Simuler le test de caméra (à remplacer par votre logique réelle)
+    setTimeout(() => {
+        status.innerHTML = '<div class="flex items-center"><div class="w-3 h-3 bg-green-500 rounded-full animate-pulse mr-2"></div><span class="text-sm text-gray-600">Camera working!</span></div>';
+        
+        // Ici vous pouvez ajouter la logique pour vraiment tester la caméra
+        if (source === '0' || source === '1') {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    testStream = stream;
+                    video.srcObject = stream;
+                })
+                .catch(err => {
+                    status.innerHTML = '<div class="flex items-center"><div class="w-3 h-3 bg-red-500 rounded-full mr-2"></div><span class="text-sm text-red-600">Error: ' + err.message + '</span></div>';
+                });
+        } else {
+            // Pour les caméras IP, on peut juste afficher un message
+            status.innerHTML = '<div class="flex items-center"><div class="w-3 h-3 bg-blue-500 rounded-full mr-2"></div><span class="text-sm text-gray-600">IP Camera - Check connection manually</span></div>';
+        }
+    }, 2000);
+}
+
+function closeTestModal() {
+    const modal = document.getElementById('cameraTestModal');
+    modal.classList.add('hidden');
+    
+    // Arrêter le flux vidéo
+    if (testStream) {
+        testStream.getTracks().forEach(track => track.stop());
+        testStream = null;
+    }
+}
+
+// Validation du formulaire
+document.getElementById('cameraForm').addEventListener('submit', function(e) {
+    const threshold = parseFloat(document.getElementById('threshold').value);
+    
+    if (threshold < 0 || threshold > 1) {
+        e.preventDefault();
+        alert('Le seuil doit être compris entre 0.0 et 1.0');
+    }
+});
+
+// Initialisation
+document.addEventListener('DOMContentLoaded', function() {
+    updateThresholdInfo(document.getElementById('threshold').value);
+});
+</script>
+
+<!-- Styles supplémentaires -->
+<style>
+/* Style personnalisé pour le range input */
+input[type=range] {
+    -webkit-appearance: none;
+    background: transparent;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #233853;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-top: -8px;
+    box-shadow: 0 2px 6px rgba(35, 56, 83, 0.3);
+    transition: all 0.2s ease;
+}
+
+input[type=range]::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    background: #2c4464;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(to right, #ff6b6b, #ffd93d, #6bcf7f);
+    border-radius: 2px;
+}
+
+/* Animation pour le focus */
+input:focus, select:focus {
+    box-shadow: 0 0 0 3px rgba(35, 56, 83, 0.1);
+}
+</style>
+{% endblock %}

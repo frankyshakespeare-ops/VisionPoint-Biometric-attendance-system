@@ -1,13 +1,188 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Success</title>
-</head>
-<body>
-    <h1>Camera Configuration Saved Successfully!</h1>
-    <a href="{% url 'camera_config_create' %}">Create another</a>
-    <a href="{% url 'camera_config_list' %}">View saved configurations</a>
-</body>
-</html>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Success{% endblock %}
+
+{% block content %}
+<div class="min-h-[80vh] flex items-center justify-center">
+    <div class="max-w-md w-full">
+        <!-- Carte de succès -->
+        <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+            <!-- En-tête avec icône de succès -->
+            <div class="bg-gradient-to-r from-green-500 to-green-600 px-8 py-10 text-center">
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-white/20 rounded-full mb-4 backdrop-blur-sm">
+                    <i class="fas fa-check text-white text-4xl"></i>
+                </div>
+                <h1 class="text-2xl font-bold text-white mb-2">Success!</h1>
+                <p class="text-white/90">Camera Configuration Saved Successfully</p>
+            </div>
+            
+            <!-- Corps de la carte -->
+            <div class="p-8">
+                <!-- Message de confirmation -->
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
+                        <i class="fas fa-camera text-green-600 text-2xl"></i>
+                    </div>
+                    <h2 class="text-xl font-semibold text-gray-800 mb-2">Configuration Enregistrée</h2>
+                    <p class="text-gray-600">
+                        Votre configuration de caméra a été créée avec succès. 
+                        Vous pouvez maintenant l'utiliser pour la reconnaissance faciale.
+                    </p>
+                </div>
+                
+                <!-- Résumé de la configuration (optionnel) -->
+                {% if config %}
+                <div class="bg-gray-50 rounded-xl p-4 mb-8">
+                    <h3 class="text-sm font-medium text-gray-700 mb-3 flex items-center">
+                        <i class="fas fa-info-circle text-[#233853] mr-2"></i>
+                        Configuration Summary
+                    </h3>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Name:</span>
+                            <span class="font-medium text-gray-800">{{ config.name }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Camera Source:</span>
+                            <span class="font-medium text-gray-800">{{ config.camera_source }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Threshold:</span>
+                            <span class="font-medium text-gray-800">{{ config.threshold }}%</span>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Boutons d'action -->
+                <div class="space-y-3">
+                    <a href="{% url 'camera_config_create' %}" 
+                       class="w-full bg-[#233853] text-white px-6 py-4 rounded-xl font-medium hover:bg-[#2c4464] transition-colors duration-200 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl">
+                        <i class="fas fa-plus"></i>
+                        <span>Create Another Configuration</span>
+                    </a>
+                    
+                    <a href="{% url 'camera_config_list' %}" 
+                       class="w-full bg-white border-2 border-[#233853] text-[#233853] px-6 py-4 rounded-xl font-medium hover:bg-[#233853] hover:text-white transition-colors duration-200 flex items-center justify-center space-x-2">
+                        <i class="fas fa-list"></i>
+                        <span>View Saved Configurations</span>
+                    </a>
+                    
+                    <a href="{% url 'home' %}" 
+                       class="w-full bg-gray-100 text-gray-700 px-6 py-3 rounded-xl font-medium hover:bg-gray-200 transition-colors duration-200 flex items-center justify-center space-x-2">
+                        <i class="fas fa-home"></i>
+                        <span>Back to Home</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Message de confirmation supplémentaire -->
+        <div class="mt-6 text-center text-sm text-gray-500">
+            <i class="far fa-clock mr-1"></i>
+            Redirecting to <a href="{% url 'camera_config_list' %}" class="text-[#233853] hover:underline">configurations list</a> in <span id="countdown">5</span> seconds...
+        </div>
+    </div>
+</div>
+
+<!-- Script pour le compte à rebours et redirection automatique -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let seconds = 5;
+    const countdownElement = document.getElementById('countdown');
+    
+    const interval = setInterval(function() {
+        seconds--;
+        countdownElement.textContent = seconds;
+        
+        if (seconds <= 0) {
+            clearInterval(interval);
+            window.location.href = "{% url 'camera_config_list' %}";
+        }
+    }, 1000);
+    
+    // Option pour annuler la redirection
+    countdownElement.addEventListener('click', function() {
+        clearInterval(interval);
+        this.parentElement.innerHTML = 'Redirection annulée. <a href="{% url 'camera_config_list' %}" class="text-[#233853] hover:underline">Cliquez ici</a> pour continuer.';
+    });
+});
+
+// Animation de confettis (optionnel)
+function launchConfetti() {
+    // Simple effet de confettis avec des cercles
+    const colors = ['#233853', '#FFD700', '#4CAF50', '#2196F3'];
+    
+    for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.style.position = 'fixed';
+        confetti.style.left = Math.random() * 100 + '%';
+        confetti.style.top = '-10px';
+        confetti.style.width = Math.random() * 10 + 5 + 'px';
+        confetti.style.height = confetti.style.width;
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.borderRadius = '50%';
+        confetti.style.pointerEvents = 'none';
+        confetti.style.zIndex = '9999';
+        confetti.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`;
+        
+        document.body.appendChild(confetti);
+        
+        setTimeout(() => {
+            confetti.remove();
+        }, 5000);
+    }
+}
+
+// Lancer les confettis au chargement
+window.addEventListener('load', launchConfetti);
+
+// Ajouter l'animation de chute
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes fall {
+        to {
+            transform: translateY(100vh) rotate(360deg);
+        }
+    }
+`;
+document.head.appendChild(style);
+</script>
+
+<!-- Styles supplémentaires pour les animations -->
+<style>
+/* Animation de pulsation pour l'icône */
+@keyframes pulse-success {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+}
+
+.bg-gradient-to-r i {
+    animation: pulse-success 2s infinite;
+}
+
+/* Effet de brillance au survol des boutons */
+.hover\:shadow-xl:hover {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Animation pour le compte à rebours */
+#countdown {
+    cursor: pointer;
+    font-weight: bold;
+    color: #233853;
+    transition: color 0.3s ease;
+}
+
+#countdown:hover {
+    color: #FFD700;
+}
+</style>
+{% endblock %}
