@@ -37,4 +37,5 @@ project/
 │── templates/
 │── static/
 │── README.md
-
+utils/
+└── config.py
