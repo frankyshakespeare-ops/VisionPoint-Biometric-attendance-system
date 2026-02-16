@@ -1,108 +1,223 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #121212; /* Dark background */
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .login-container {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-            width: 300px;
-            position: relative; /* Position relative for absolute positioning of back icon */
-        }
-        h2 {
-            text-align: center;
-            color: #FFD700; /* Gold color */
-            margin-bottom: 20px;
-            font-weight: bold;
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-        }
-        label {
-            margin-bottom: 8px;
-            color: #333;
-            font-weight: bold;
-        }
-        input[type="text"],
-        input[type="password"] {
-            padding: 12px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-        input:focus {
-            border-color: #FFD700; /* Gold color on focus */
-            outline: none;
-        }
-        button {
-            background-color: #FFD700; /* Gold color */
-            color: #121212; /* Dark text */
-            padding: 12px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #FFC107; /* Lighter gold on hover */
-        }
-        .message {
-            background-color: #f2dede;
-            color: #a94442;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 4px;
-            border: 1px solid #ebccd1;
-        }
-        .back-icon {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            font-size: 20px;
-            color: black; /* Changed back icon color to black */
-            cursor: pointer;
-        }
-    </style>
-</head>
-<body>
-    <div class="login-container">
-        <i class="fas fa-arrow-left back-icon" onclick="window.history.back();" aria-hidden="true"></i> <!-- Back icon -->
-        <h2>Admin Login</h2>
-        <p style="text-align: center; color: #333;">Please enter your admin username and password.</p> <!-- Instruction message -->
-        {% if messages %}
-            {% for message in messages %}
-                <div class="message">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-        <form method="post">
-            {% csrf_token %}
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" placeholder="Enter admin username" required>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Admin Login{% endblock %}
+
+{% block content %}
+<div class="min-h-[80vh] flex items-center justify-center">
+    <div class="max-w-md w-full">
+        <!-- Carte de login -->
+        <div class="bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden">
+            <!-- En-tête avec dégradé -->
+            <div class="bg-gradient-to-r from-[#233853] to-[#2c4464] px-8 py-10 text-center relative">
+                <!-- Bouton retour avec icône -->
+                <button onclick="window.history.back();" 
+                        class="absolute top-4 left-4 text-white/80 hover:text-white transition-colors duration-200">
+                    <i class="fas fa-arrow-left text-xl"></i>
+                </button>
+                
+                <!-- Logo ou icône -->
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-white/20 rounded-full mb-4 backdrop-blur-sm">
+                    <i class="fas fa-user-shield text-white text-3xl"></i>
+                </div>
+                
+                <h1 class="text-2xl font-bold text-white mb-2">Admin Login</h1>
+                <p class="text-white/80 text-sm">
+                    <i class="fas fa-lock mr-1"></i>
+                    Please enter your admin credentials
+                </p>
+            </div>
             
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" placeholder="Enter admin password" required>
-            
-            <button type="submit">Login</button>
-        </form>
+            <!-- Corps du formulaire -->
+            <div class="p-8">
+                <!-- Messages d'erreur -->
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="mb-6 p-4 rounded-lg {% if message.tags == 'error' %}bg-red-50 border-l-4 border-red-500 text-red-700{% else %}bg-yellow-50 border-l-4 border-yellow-500 text-yellow-700{% endif %} flex items-start animate-shake">
+                            <i class="fas {% if message.tags == 'error' %}fa-exclamation-circle{% else %}fa-info-circle{% endif %} mr-3 mt-0.5"></i>
+                            <div>{{ message }}</div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <form method="post" class="space-y-6">
+                    {% csrf_token %}
+                    
+                    <!-- Champ Username -->
+                    <div class="space-y-2">
+                        <label for="username" class="block text-sm font-semibold text-gray-700">
+                            <i class="fas fa-user text-[#233853] mr-2"></i>
+                            Username
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-user text-gray-400"></i>
+                            </div>
+                            <input type="text" 
+                                   id="username" 
+                                   name="username" 
+                                   placeholder="Enter admin username"
+                                   required
+                                   autocomplete="off"
+                                   class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:border-[#233853] focus:ring-2 focus:ring-[#233853]/20 outline-none transition-all duration-200">
+                        </div>
+                    </div>
+
+                    <!-- Champ Password -->
+                    <div class="space-y-2">
+                        <label for="password" class="block text-sm font-semibold text-gray-700">
+                            <i class="fas fa-lock text-[#233853] mr-2"></i>
+                            Password
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-key text-gray-400"></i>
+                            </div>
+                            <input type="password" 
+                                   id="password" 
+                                   name="password" 
+                                   placeholder="Enter admin password"
+                                   required
+                                   class="w-full pl-10 pr-12 py-3 border border-gray-200 rounded-xl focus:border-[#233853] focus:ring-2 focus:ring-[#233853]/20 outline-none transition-all duration-200">
+                            
+                            <!-- Bouton toggle password visibility -->
+                            <button type="button" 
+                                    onclick="togglePassword()"
+                                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-[#233853] transition-colors duration-200">
+                                <i class="fas fa-eye" id="togglePasswordIcon"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Options supplémentaires -->
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <input type="checkbox" 
+                                   id="remember" 
+                                   name="remember" 
+                                   class="w-4 h-4 text-[#233853] bg-gray-100 border-gray-300 rounded focus:ring-[#233853] focus:ring-2">
+                            <label for="remember" class="ml-2 text-sm text-gray-600">
+                                Remember me
+                            </label>
+                        </div>
+                        
+                        <a href="#" class="text-sm text-[#233853] hover:underline">
+                            Forgot password?
+                        </a>
+                    </div>
+
+                    <!-- Bouton de connexion -->
+                    <button type="submit" 
+                            class="w-full bg-[#233853] text-white py-4 px-6 rounded-xl font-medium hover:bg-[#2c4464] transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl group">
+                        <i class="fas fa-sign-in-alt group-hover:translate-x-1 transition-transform duration-200"></i>
+                        <span>Login to Dashboard</span>
+                    </button>
+                </form>
+
+                <!-- Séparateur -->
+                <div class="relative my-6">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-200"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-2 bg-white text-gray-500">Secure Access</span>
+                    </div>
+                </div>
+
+                <!-- Informations de sécurité -->
+                <div class="flex items-center justify-center space-x-4 text-xs text-gray-500">
+                    <div class="flex items-center">
+                        <i class="fas fa-shield-alt text-green-500 mr-1"></i>
+                        <span>SSL Secured</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-clock text-blue-500 mr-1"></i>
+                        <span>Session timeout: 30min</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Note de bas de page -->
+        <div class="mt-6 text-center text-sm text-gray-500">
+            <i class="far fa-copyright mr-1"></i>
+            VisionPoint Biometric Attendance System v1.0
+        </div>
     </div>
-</body>
-</html>
+</div>
+
+<!-- Script pour toggle password visibility -->
+<script>
+function togglePassword() {
+    const passwordInput = document.getElementById('password');
+    const toggleIcon = document.getElementById('togglePasswordIcon');
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.classList.remove('fa-eye');
+        toggleIcon.classList.add('fa-eye-slash');
+    } else {
+        passwordInput.type = 'password';
+        toggleIcon.classList.remove('fa-eye-slash');
+        toggleIcon.classList.add('fa-eye');
+    }
+}
+
+// Animation pour le bouton de connexion
+document.addEventListener('DOMContentLoaded', function() {
+    const loginForm = document.querySelector('form');
+    
+    loginForm.addEventListener('submit', function(e) {
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Authenticating...';
+        
+        // Le formulaire sera soumis normalement
+        // Le bouton reste désactivé pour éviter les doubles soumissions
+    });
+});
+
+// Animation de shake pour les messages d'erreur
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+        20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+    .animate-shake {
+        animation: shake 0.5s ease-in-out;
+    }
+`;
+document.head.appendChild(style);
+</script>
+
+<!-- Styles supplémentaires -->
+<style>
+/* Animation pour le focus des inputs */
+input:focus {
+    box-shadow: 0 0 0 3px rgba(35, 56, 83, 0.1);
+}
+
+/* Effet de brillance au survol */
+.group:hover .group-hover\:translate-x-1 {
+    transform: translateX(0.25rem);
+}
+
+/* Transition pour le bouton toggle */
+#togglePasswordIcon {
+    transition: color 0.2s ease;
+}
+
+/* Style pour l'autofill */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+    -webkit-text-fill-color: #333 !important;
+}
+</style>
+{% endblock %}

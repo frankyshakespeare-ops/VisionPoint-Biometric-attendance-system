@@ -1,0 +1,156 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #233853;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 280px;
+    background-color: #1f324a;
+    padding: 30px 25px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    margin-bottom: 60px;
+}
+
+.logo img {
+    width: 45px;
+    margin-right: 12px;
+}
+
+.logo-text h2 {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.logo-text p {
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar ul li {
+    margin-bottom: 25px;
+    font-size: 15px;
+    cursor: pointer;
+    opacity: 0.85;
+    transition: 0.3s;
+}
+
+.sidebar ul li:hover {
+    opacity: 1;
+}
+
+/* MAIN */
+.main-content {
+    flex: 1;
+    padding: 50px 70px;
+    color: white;
+}
+
+/* TOP */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 50px;
+}
+
+.time-section h1 {
+    font-size: 80px;
+    font-weight: 300;
+}
+
+.time-section p {
+    font-size: 22px;
+    opacity: 0.7;
+}
+
+.profile-box {
+    width: 200px;
+    height: 50px;
+    background: #d9d9d9;
+    border-radius: 12px;
+}
+
+/* CARDS */
+.cards {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.card {
+    width: 250px;
+    height: 170px;
+    border-radius: 14px;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.dark-card {
+    background-color: #2a3f5f;
+}
+
+.blue-card {
+    background: linear-gradient(135deg, #2f6fd6, #3a7be0);
+}
+
+.card-icon {
+    font-size: 28px;
+    margin-bottom: auto;
+}
+
+.card h3 {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+/* BUTTON */
+.attendance-btn {
+    width: 300px;
+    height: 60px;
+    background-color: #f2c265;
+    border: none;
+    border-radius: 14px;
+    font-size: 20px;
+    font-weight: 500;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+    transition: 0.3s;
+}
+
+.attendance-btn:hover {
+    background-color: #e6b24f;
+}
