@@ -16,11 +16,11 @@
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
             <h2 class="text-xl font-semibold text-gray-800 mb-6">Informations personnelles</h2>
             
-            <form method="POST" enctype="multipart/form-data" class="space-y-6">
+            <form method="POST" enctype="multipart/form-data" id="registrationForm">
                 {% csrf_token %}
                 
                 <!-- Champ Nom -->
-                <div>
+                <div class="mb-4">
                     <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
                         <i class="fas fa-user text-[#233853] mr-2"></i>Full Name
                     </label>
@@ -33,7 +33,7 @@
                 </div>
 
                 <!-- Champ Email -->
-                <div>
+                <div class="mb-4">
                     <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
                         <i class="fas fa-envelope text-[#233853] mr-2"></i>Email
                     </label>
@@ -46,39 +46,38 @@
                 </div>
 
                 <!-- Champ Téléphone -->
-                <div>
-                    <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">
+                <div class="mb-4">
+                    <label for="phone_number" class="block text-sm font-medium text-gray-700 mb-2">
                         <i class="fas fa-phone text-[#233853] mr-2"></i>Phone Number
                     </label>
                     <input type="tel" 
-                           id="phone" 
-                           name="phone" 
+                           id="phone_number" 
+                           name="phone_number" 
                            required
                            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#233853] focus:ring-2 focus:ring-[#233853]/20 outline-none transition-all duration-200"
                            placeholder="+221 77 123 45 67">
                 </div>
 
                 <!-- Champ Classe -->
-                <div>
-                    <label for="class" class="block text-sm font-medium text-gray-700 mb-2">
+                <div class="mb-6">
+                    <label for="student_class" class="block text-sm font-medium text-gray-700 mb-2">
                         <i class="fas fa-graduation-cap text-[#233853] mr-2"></i>Class
                     </label>
-                    <select id="class" 
-                            name="class" 
-                            required
-                            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#233853] focus:ring-2 focus:ring-[#233853]/20 outline-none transition-all duration-200 bg-white">
-                        <option value="" disabled selected>Sélectionnez une classe</option>
-                        <option value="L1">Licence 1</option>
-                        <option value="L2">Licence 2</option>
-                        <option value="L3">Licence 3</option>
-                        <option value="M1">Master 1</option>
-                        <option value="M2">Master 2</option>
-                    </select>
+                    <input type="text" 
+                           id="student_class" 
+                           name="student_class" 
+                           required
+                           class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#233853] focus:ring-2 focus:ring-[#233853]/20 outline-none transition-all duration-200"
+                           placeholder="Ex: L3, M1, etc.">
                 </div>
 
+                <!-- Champ caché pour l'image -->
+                <input type="hidden" id="image_data" name="image_data">
+
                 <!-- Bouton Submit -->
-                <div class="pt-4">
+                <div>
                     <button type="submit" 
+                            id="submitBtn"
                             class="w-full bg-[#233853] text-white py-4 px-6 rounded-xl font-medium hover:bg-[#2c4464] transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl">
                         <i class="fas fa-user-plus"></i>
                         <span>Register Student</span>
@@ -110,21 +109,21 @@
                     </div>
 
                     <!-- Canvas caché pour la capture -->
-                    <canvas id="canvas" class="hidden"></canvas>
+                    <canvas id="canvas" width="640" height="480" class="hidden"></canvas>
                 </div>
 
                 <!-- Contrôles de la caméra -->
                 <div class="flex items-center justify-between">
                     <div class="flex space-x-3">
                         <!-- Bouton démarrer/arrêter caméra -->
-                        <button id="startCamera" 
+                        <button type="button" id="startCamera" 
                                 class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors duration-200 flex items-center space-x-2">
                             <i class="fas fa-play"></i>
                             <span class="hidden sm:inline">Démarrer</span>
                         </button>
                         
                         <!-- Bouton capturer photo -->
-                        <button id="capture" 
+                        <button type="button" id="capture" 
                                 class="bg-[#233853] text-white px-4 py-2 rounded-lg hover:bg-[#2c4464] transition-colors duration-200 flex items-center space-x-2"
                                 disabled>
                             <i class="fas fa-camera"></i>
@@ -142,11 +141,11 @@
                 <!-- Aperçu de la photo capturée -->
                 <div id="preview" class="hidden mt-6">
                     <h3 class="text-sm font-medium text-gray-700 mb-3">Aperçu de la capture</h3>
-                    <div class="relative">
+                    <div class="relative inline-block">
                         <img id="previewImage" class="w-32 h-32 object-cover rounded-lg border-2 border-[#233853]" alt="Preview">
-                        <button id="retake" 
+                        <button type="button" id="retake" 
                                 class="absolute -top-2 -right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition-colors duration-200">
-                            <i class="fas fa-times text-sm"></i>
+                            <i class="fas fa-times text-xs"></i>
                         </button>
                     </div>
                 </div>
@@ -158,10 +157,10 @@
                         Instructions
                     </h4>
                     <ul class="text-sm text-blue-700 space-y-1">
-                        <li>• Assurez-vous d'avoir un bon éclairage</li>
-                        <li>• Placez votre visage bien droit dans le cadre</li>
-                        <li>• Évitez les expressions extrêmes</li>
-                        <li>• Retirez les accessoires qui cachent le visage</li>
+                        <li>• Cliquez sur "Démarrer" pour activer la caméra</li>
+                        <li>• Placez votre visage dans le cadre</li>
+                        <li>• Cliquez sur "Capturer" pour prendre la photo</li>
+                        <li>• Soumettez le formulaire pour enregistrer</li>
                     </ul>
                 </div>
             </div>
@@ -169,7 +168,18 @@
     </div>
 </div>
 
-<!-- JavaScript pour la caméra -->
+<!-- Message de succès/erreur (optionnel) -->
+{% if messages %}
+<div class="fixed top-4 right-4 z-50">
+    {% for message in messages %}
+    <div class="bg-{% if message.tags == 'success' %}green{% else %}red{% endif %}-100 border-l-4 border-{% if message.tags == 'success' %}green{% else %}red{% endif %}-500 text-{% if message.tags == 'success' %}green{% else %}red{% endif %}-700 p-4 rounded-lg shadow-lg mb-2" role="alert">
+        <p>{{ message }}</p>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- JavaScript pour la caméra et la soumission du formulaire -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const video = document.getElementById('video');
@@ -180,11 +190,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const preview = document.getElementById('preview');
     const previewImage = document.getElementById('previewImage');
     const retakeButton = document.getElementById('retake');
+    const imageDataInput = document.getElementById('image_data');
+    const registrationForm = document.getElementById('registrationForm');
+    const submitBtn = document.getElementById('submitBtn');
     
     let stream = null;
     let capturedImage = null;
 
-    // Démarrer la caméra
+    // Démarrer/Arrêter la caméra
     startButton.addEventListener('click', async function() {
         if (stream) {
             // Arrêter la caméra
@@ -199,8 +212,8 @@ document.addEventListener('DOMContentLoaded', function() {
             try {
                 stream = await navigator.mediaDevices.getUserMedia({ 
                     video: { 
-                        width: { ideal: 1280 },
-                        height: { ideal: 720 },
+                        width: { ideal: 640 },
+                        height: { ideal: 480 },
                         facingMode: 'user' 
                     } 
                 });
@@ -217,10 +230,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Capturer la photo
     captureButton.addEventListener('click', function() {
         if (stream) {
-            // Configurer le canvas avec les dimensions de la vidéo
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            
             // Dessiner l'image vidéo sur le canvas
             const context = canvas.getContext('2d');
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -228,19 +237,14 @@ document.addEventListener('DOMContentLoaded', function() {
             // Convertir en data URL
             capturedImage = canvas.toDataURL('image/jpeg');
             
+            // Mettre l'image dans le champ caché
+            imageDataInput.value = capturedImage;
+            
             // Afficher l'aperçu
             previewImage.src = capturedImage;
             preview.classList.remove('hidden');
             
-            // Ajouter un champ caché au formulaire pour l'image
-            let hiddenInput = document.querySelector('input[name="face_image"]');
-            if (!hiddenInput) {
-                hiddenInput = document.createElement('input');
-                hiddenInput.type = 'hidden';
-                hiddenInput.name = 'face_image';
-                document.querySelector('form').appendChild(hiddenInput);
-            }
-            hiddenInput.value = capturedImage;
+            console.log("Image capturée et prête à être envoyée");
         }
     });
 
@@ -248,10 +252,31 @@ document.addEventListener('DOMContentLoaded', function() {
     retakeButton.addEventListener('click', function() {
         preview.classList.add('hidden');
         capturedImage = null;
-        let hiddenInput = document.querySelector('input[name="face_image"]');
-        if (hiddenInput) {
-            hiddenInput.remove();
+        imageDataInput.value = '';
+    });
+
+    // Validation avant soumission
+    registrationForm.addEventListener('submit', function(event) {
+        // Vérifier si une image a été capturée
+        if (!imageDataInput.value) {
+            event.preventDefault();
+            alert('Veuillez capturer une photo avant de soumettre le formulaire !');
+            return;
         }
+        
+        // Vérifier que tous les champs sont remplis
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const phone = document.getElementById('phone_number').value;
+        const studentClass = document.getElementById('student_class').value;
+        
+        if (!name || !email || !phone || !studentClass) {
+            event.preventDefault();
+            alert('Veuillez remplir tous les champs du formulaire !');
+            return;
+        }
+        
+        console.log("Formulaire soumis avec image :", imageDataInput.value.substring(0, 50) + "...");
     });
 
     // Nettoyer à la fermeture
@@ -262,20 +287,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-
-<style>
-/* Styles supplémentaires pour l'animation du cadre */
-@keyframes pulse-border {
-    0%, 100% {
-        border-color: rgba(35, 56, 83, 0.5);
-    }
-    50% {
-        border-color: rgba(35, 56, 83, 0.8);
-    }
-}
-
-.animate-pulse-border {
-    animation: pulse-border 2s infinite;
-}
-</style>
 {% endblock %}

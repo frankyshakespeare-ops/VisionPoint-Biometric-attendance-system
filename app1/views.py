@@ -23,6 +23,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from .models import Student
+from django.core.paginator import Paginator
+from django.shortcuts import render
+from .models import Student
 
 
 # Initialize MTCNN and InceptionResnetV1
@@ -306,7 +309,12 @@ def is_admin(user):
 @login_required
 @user_passes_test(is_admin)
 def student_list(request):
-    students = Student.objects.all()
+    students_list = Student.objects.all().order_by('-id')
+    paginator = Paginator(students_list, 10)  # 10 étudiants par page
+    
+    page_number = request.GET.get('page')
+    students = paginator.get_page(page_number)
+    
     return render(request, 'student_list.html', {'students': students})
 
 @login_required
