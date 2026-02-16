@@ -1,0 +1,12 @@
+# Environnement et base de données
+venv/
+db.sqlite3
+
+# Médias et fichiers volumineux
+media/
+*.jpg
+
+# Spécifique à Windows et aux éditeurs
+Thumbs.db
+desktop.ini
+.vscode/
