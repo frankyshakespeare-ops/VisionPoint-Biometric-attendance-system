@@ -1,184 +1,281 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
+{% load static %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Registration</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f0f2f5;
-            font-family: 'Arial', sans-serif;
-            color: #343a40;
-        }
+{% block title %}Student Registration{% endblock %}
 
-        .container {
-            margin-top: 50px;
-            max-width: 600px;
-        }
+{% block content %}
+<div class="max-w-7xl mx-auto">
+    <!-- En-tête -->
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">Student Registration</h1>
+        <p class="text-gray-600 mt-2">Enregistrez un nouvel étudiant avec capture faciale</p>
+    </div>
 
-        .card {
-            border: none;
-            border-radius: 1.5rem;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-        }
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Colonne gauche : Formulaire -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
+            <h2 class="text-xl font-semibold text-gray-800 mb-6">Informations personnelles</h2>
+            
+            <form method="POST" enctype="multipart/form-data" class="space-y-6">
+                {% csrf_token %}
+                
+                <!-- Champ Nom -->
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-user text-[#233853] mr-2"></i>Full Name
+                    </label>
+                    <input type="text" 
+                           id="name" 
+                           name="name" 
+                           required
+                           class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#233853] focus:ring-2 focus:ring-[#233853]/20 outline-none transition-all duration-200"
+                           placeholder="Entrez le nom complet">
+                </div>
 
-        h2 {
-            margin-bottom: 20px;
-            font-size: 2rem;
-            font-weight: bold;
-            color: #28a745;
-        }
+                <!-- Champ Email -->
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-envelope text-[#233853] mr-2"></i>Email
+                    </label>
+                    <input type="email" 
+                           id="email" 
+                           name="email" 
+                           required
+                           class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#233853] focus:ring-2 focus:ring-[#233853]/20 outline-none transition-all duration-200"
+                           placeholder="exemple@email.com">
+                </div>
 
-        video {
-            width: 100%;
-            height: auto;
-            border-radius: 1rem;
-            border: 5px solid #28a745;
-            max-width: 100%;
-            margin-bottom: 20px;
-        }
+                <!-- Champ Téléphone -->
+                <div>
+                    <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-phone text-[#233853] mr-2"></i>Phone Number
+                    </label>
+                    <input type="tel" 
+                           id="phone" 
+                           name="phone" 
+                           required
+                           class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#233853] focus:ring-2 focus:ring-[#233853]/20 outline-none transition-all duration-200"
+                           placeholder="+221 77 123 45 67">
+                </div>
 
-        .image-preview {
-            display: none;
-            margin-top: 15px;
-            border-radius: 1rem;
-            border: 1px solid #ced4da;
-            max-width: 100%;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
+                <!-- Champ Classe -->
+                <div>
+                    <label for="class" class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-graduation-cap text-[#233853] mr-2"></i>Class
+                    </label>
+                    <select id="class" 
+                            name="class" 
+                            required
+                            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#233853] focus:ring-2 focus:ring-[#233853]/20 outline-none transition-all duration-200 bg-white">
+                        <option value="" disabled selected>Sélectionnez une classe</option>
+                        <option value="L1">Licence 1</option>
+                        <option value="L2">Licence 2</option>
+                        <option value="L3">Licence 3</option>
+                        <option value="M1">Master 1</option>
+                        <option value="M2">Master 2</option>
+                    </select>
+                </div>
 
-        .btn-success {
-            background-color: #28a745;
-            border: none;
-            transition: background-color 0.3s;
-        }
+                <!-- Bouton Submit -->
+                <div class="pt-4">
+                    <button type="submit" 
+                            class="w-full bg-[#233853] text-white py-4 px-6 rounded-xl font-medium hover:bg-[#2c4464] transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Register Student</span>
+                    </button>
+                </div>
+            </form>
+        </div>
 
-        .btn-success:hover {
-            background-color: #218838;
-        }
-
-        .form-group label {
-            font-weight: bold;
-        }
-
-        .social-icons {
-            margin-top: 20px;
-        }
-
-        .social-icons i {
-            font-size: 1.5rem;
-            margin: 0 10px;
-            color: #6c757d;
-        }
-
-        .social-icons i:hover {
-            color: #28a745;
-            transition: color 0.3s;
-        }
-
-        .back-button {
-            margin-top: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: bold;
-            color: #28a745;
-            cursor: pointer;
-        }
-
-        .back-button i {
-            margin-right: 5px;
-        }
-
-        .back-button:hover {
-            color: #218838;
-        }
-    </style>
-</head>
-
-<body>
-    <div class="container">
-        <div class="card shadow">
-            <div class="card-body text-center">
-                <h2 class="card-title">Student Registration</h2>
-                <video id="video" autoplay></video>
-                <form id="registrationForm" method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label for="name">Name:</label>
-                        <input type="text" class="form-control" id="name" name="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email:</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="phone_number">Phone Number:</label>
-                        <input type="text" class="form-control" id="phone_number" name="phone_number" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="student_class">Class:</label>
-                        <input type="text" class="form-control" id="student_class" name="student_class" required>
+        <!-- Colonne droite : Capture faciale -->
+        <div class="space-y-6">
+            <!-- Zone de capture vidéo -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
+                <h2 class="text-xl font-semibold text-gray-800 mb-6">Face Capture</h2>
+                
+                <!-- Conteneur vidéo -->
+                <div class="relative bg-gray-900 rounded-xl overflow-hidden aspect-video mb-4">
+                    <video id="video" 
+                           class="w-full h-full object-cover"
+                           autoplay 
+                           playsinline>
+                    </video>
+                    
+                    <!-- Overlay pour guide de positionnement -->
+                    <div class="absolute inset-0 border-4 border-[#233853]/50 rounded-xl pointer-events-none">
+                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-center">
+                            <i class="fas fa-face-smile text-6xl text-white/30"></i>
+                            <p class="text-sm mt-2 text-white/70">Placez votre visage dans le cadre</p>
+                        </div>
                     </div>
 
-                    <canvas id="canvas" width="640" height="480" style="display: none;"></canvas>
-                    <input type="hidden" id="image_data" name="image_data">
-                    <img id="imagePreview" class="image-preview" src="" alt="Captured Image Preview" />
-                    <div class="form-group text-center">
-                        <button type="submit" class="btn btn-success" id="submitBtn">Submit Registration</button>
+                    <!-- Canvas caché pour la capture -->
+                    <canvas id="canvas" class="hidden"></canvas>
+                </div>
+
+                <!-- Contrôles de la caméra -->
+                <div class="flex items-center justify-between">
+                    <div class="flex space-x-3">
+                        <!-- Bouton démarrer/arrêter caméra -->
+                        <button id="startCamera" 
+                                class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors duration-200 flex items-center space-x-2">
+                            <i class="fas fa-play"></i>
+                            <span class="hidden sm:inline">Démarrer</span>
+                        </button>
+                        
+                        <!-- Bouton capturer photo -->
+                        <button id="capture" 
+                                class="bg-[#233853] text-white px-4 py-2 rounded-lg hover:bg-[#2c4464] transition-colors duration-200 flex items-center space-x-2"
+                                disabled>
+                            <i class="fas fa-camera"></i>
+                            <span class="hidden sm:inline">Capturer</span>
+                        </button>
                     </div>
-                    <div class="back-button" onclick="location.href='{% url 'home' %}'">
-                        <i class="fas fa-home"></i> Back to Home
+
+                    <!-- Indicateur de statut -->
+                    <div id="cameraStatus" class="flex items-center space-x-2 text-sm">
+                        <div class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                        <span class="text-gray-600">Caméra éteinte</span>
                     </div>
-                </form>
-                <div class="social-icons">
-                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
-                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                </div>
+
+                <!-- Aperçu de la photo capturée -->
+                <div id="preview" class="hidden mt-6">
+                    <h3 class="text-sm font-medium text-gray-700 mb-3">Aperçu de la capture</h3>
+                    <div class="relative">
+                        <img id="previewImage" class="w-32 h-32 object-cover rounded-lg border-2 border-[#233853]" alt="Preview">
+                        <button id="retake" 
+                                class="absolute -top-2 -right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition-colors duration-200">
+                            <i class="fas fa-times text-sm"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Instructions -->
+                <div class="mt-6 p-4 bg-blue-50 rounded-lg">
+                    <h4 class="text-sm font-medium text-blue-800 mb-2 flex items-center">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        Instructions
+                    </h4>
+                    <ul class="text-sm text-blue-700 space-y-1">
+                        <li>• Assurez-vous d'avoir un bon éclairage</li>
+                        <li>• Placez votre visage bien droit dans le cadre</li>
+                        <li>• Évitez les expressions extrêmes</li>
+                        <li>• Retirez les accessoires qui cachent le visage</li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        const video = document.getElementById('video');
-        const canvas = document.getElementById('canvas');
-        const imageDataInput = document.getElementById('image_data');
-        const registrationForm = document.getElementById('registrationForm');
-        const imagePreview = document.getElementById('imagePreview');
+<!-- JavaScript pour la caméra -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const startButton = document.getElementById('startCamera');
+    const captureButton = document.getElementById('capture');
+    const cameraStatus = document.getElementById('cameraStatus');
+    const preview = document.getElementById('preview');
+    const previewImage = document.getElementById('previewImage');
+    const retakeButton = document.getElementById('retake');
+    
+    let stream = null;
+    let capturedImage = null;
 
-        // Access the webcam
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then(stream => {
+    // Démarrer la caméra
+    startButton.addEventListener('click', async function() {
+        if (stream) {
+            // Arrêter la caméra
+            stream.getTracks().forEach(track => track.stop());
+            video.srcObject = null;
+            stream = null;
+            startButton.innerHTML = '<i class="fas fa-play"></i><span class="hidden sm:inline">Démarrer</span>';
+            captureButton.disabled = true;
+            cameraStatus.innerHTML = '<div class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div><span class="text-gray-600">Caméra éteinte</span>';
+        } else {
+            // Démarrer la caméra
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { 
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 },
+                        facingMode: 'user' 
+                    } 
+                });
                 video.srcObject = stream;
-                video.play();
-            })
-            .catch(err => {
-                console.error("Error accessing the camera: ", err);
-            });
+                startButton.innerHTML = '<i class="fas fa-stop"></i><span class="hidden sm:inline">Arrêter</span>';
+                captureButton.disabled = false;
+                cameraStatus.innerHTML = '<div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div><span class="text-gray-600">Caméra active</span>';
+            } catch (error) {
+                alert('Erreur d\'accès à la caméra: ' + error.message);
+            }
+        }
+    });
 
-        // Capture the image when the form is submitted
-        registrationForm.addEventListener('submit', (event) => {
-            event.preventDefault();
-            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-            const dataURL = canvas.toDataURL('image/jpeg');
-            imageDataInput.value = dataURL;
+    // Capturer la photo
+    captureButton.addEventListener('click', function() {
+        if (stream) {
+            // Configurer le canvas avec les dimensions de la vidéo
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            
+            // Dessiner l'image vidéo sur le canvas
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+            // Convertir en data URL
+            capturedImage = canvas.toDataURL('image/jpeg');
+            
+            // Afficher l'aperçu
+            previewImage.src = capturedImage;
+            preview.classList.remove('hidden');
+            
+            // Ajouter un champ caché au formulaire pour l'image
+            let hiddenInput = document.querySelector('input[name="face_image"]');
+            if (!hiddenInput) {
+                hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'face_image';
+                document.querySelector('form').appendChild(hiddenInput);
+            }
+            hiddenInput.value = capturedImage;
+        }
+    });
 
-            // Show the captured image preview
-            imagePreview.src = dataURL;
-            imagePreview.style.display = 'block';
+    // Reprendre la photo
+    retakeButton.addEventListener('click', function() {
+        preview.classList.add('hidden');
+        capturedImage = null;
+        let hiddenInput = document.querySelector('input[name="face_image"]');
+        if (hiddenInput) {
+            hiddenInput.remove();
+        }
+    });
 
-            // Submit the form programmatically
-            registrationForm.submit();
-        });
-    </script>
+    // Nettoyer à la fermeture
+    window.addEventListener('beforeunload', function() {
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+        }
+    });
+});
+</script>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
-</body>
+<style>
+/* Styles supplémentaires pour l'animation du cadre */
+@keyframes pulse-border {
+    0%, 100% {
+        border-color: rgba(35, 56, 83, 0.5);
+    }
+    50% {
+        border-color: rgba(35, 56, 83, 0.8);
+    }
+}
 
-</html>
+.animate-pulse-border {
+    animation: pulse-border 2s infinite;
+}
+</style>
+{% endblock %}

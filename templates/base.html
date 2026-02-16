@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VisionPoint - {% block title %}Accueil{% endblock %}</title>
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* Animation pour la sidebar */
+        .sidebar-item {
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+        }
+        
+        /* Style pour les cartes */
+        .stat-card {
+            border-radius: 14px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="flex h-screen overflow-hidden">
+        
+        <!-- Sidebar avec la couleur #233853 -->
+        <div class="group h-full w-20 hover:w-64 bg-[#233853] text-white transition-all duration-300 ease-in-out flex flex-col fixed left-0 top-0 overflow-hidden shadow-xl">
+            
+            <!-- Logo / Titre -->
+            <div class="flex items-center justify-center h-20 border-b border-white/10">
+                <i class="fas fa-camera text-2xl min-w-[80px] text-center"></i>
+                <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-bold text-lg whitespace-nowrap ml-2">VisionPoint</span>
+            </div>
+            
+            <!-- Menu Items avec vos URLs -->
+            <nav class="flex-1 py-6">
+                <ul class="space-y-2 px-3">
+                    <!-- Dashboard -->
+                    <li>
+                        <a href="{% url 'home' %}" class="sidebar-item flex items-center py-3 px-3 {% if request.resolver_match.url_name == 'home' %}bg-white/10{% endif %}">
+                            <i class="fas fa-home text-xl min-w-[50px] text-center"></i>
+                            <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">Dashboard</span>
+                        </a>
+                    </li>
+                    
+                    <!-- Student Registration -->
+                    <li>
+                        <a href="{% url 'capture_student' %}" class="sidebar-item flex items-center py-3 px-3 {% if request.resolver_match.url_name == 'capture_student' %}bg-white/10{% endif %}">
+                            <i class="fas fa-user-plus text-xl min-w-[50px] text-center"></i>
+                            <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">Student Registration</span>
+                        </a>
+                    </li>
+                    
+                    <!-- Manage Students -->
+                    <li>
+                        <a href="{% url 'student-list' %}" class="sidebar-item flex items-center py-3 px-3 {% if request.resolver_match.url_name == 'student-list' %}bg-white/10{% endif %}">
+                            <i class="fas fa-users text-xl min-w-[50px] text-center"></i>
+                            <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">Manage Students</span>
+                        </a>
+                    </li>
+                    
+                    <!-- Mark Attendance -->
+                    <li>
+                        <a href="{% url 'capture_and_recognize' %}" class="sidebar-item flex items-center py-3 px-3 {% if request.resolver_match.url_name == 'capture_and_recognize' %}bg-white/10{% endif %}">
+                            <i class="fas fa-check-circle text-xl min-w-[50px] text-center"></i>
+                            <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">Mark Attendance</span>
+                        </a>
+                    </li>
+                    
+                    <!-- Attendance Details -->
+                    <li>
+                        <a href="{% url 'student_attendance_list' %}" class="sidebar-item flex items-center py-3 px-3 {% if request.resolver_match.url_name == 'student_attendance_list' %}bg-white/10{% endif %}">
+                            <i class="fas fa-calendar-alt text-xl min-w-[50px] text-center"></i>
+                            <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">Attendance Details</span>
+                        </a>
+                    </li>
+                    
+                    <!-- Manage Cameras -->
+                    <li>
+                        <a href="{% url 'camera_config_list' %}" class="sidebar-item flex items-center py-3 px-3 {% if request.resolver_match.url_name == 'camera_config_list' %}bg-white/10{% endif %}">
+                            <i class="fas fa-video text-xl min-w-[50px] text-center"></i>
+                            <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">Manage Cameras</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <!-- Footer de la sidebar (optionnel) -->
+            <div class="border-t border-white/10 p-4">
+                <div class="flex items-center">
+                    <i class="fas fa-cog text-xl min-w-[50px] text-center"></i>
+                    <span class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">Paramètres</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Contenu principal -->
+        <div class="flex-1 ml-20 overflow-auto">
+            <div class="p-8">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
