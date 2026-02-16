@@ -3,159 +3,517 @@
 
 {% block title %}Accueil{% endblock %}
 
+{% block page_title %}Dashboard{% endblock %}
+
 {% block content %}
-<!-- En-tête -->
-<div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-800">Face Based Student Attendance System</h1>
-    <p class="text-gray-600 mt-2">Gérez efficacement la présence des étudiants</p>
-</div>
-
-<!-- Cartes de statistiques -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-    <!-- Total Students -->
-    <a href="{% url 'student-list' %}" class="stat-card bg-white p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-200">
-        <div class="flex items-center justify-between mb-4">
-            <div class="bg-blue-100 p-3 rounded-xl">
-                <i class="fas fa-user-graduate text-2xl text-[#233853]"></i>
+<div class="max-w-7xl mx-auto">
+    <!-- En-tête premium avec date et heure -->
+    <div class="flex items-center justify-between mb-10">
+        <div>
+            <div class="flex items-center space-x-2 mb-2">
+                <span class="px-3 py-1 bg-gradient-to-r from-[#233853] to-[#2c4464] text-white text-xs font-semibold rounded-full">Biometric System</span>
+                <span class="px-3 py-1 bg-green-100 text-green-600 text-xs font-semibold rounded-full flex items-center">
+                    <span class="w-1.5 h-1.5 bg-green-500 rounded-full mr-1.5 animate-pulse"></span>
+                    Live
+                </span>
             </div>
-            <span class="text-sm font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">
-                <i class="fas fa-arrow-up mr-1 text-xs"></i> +12%
-            </span>
-        </div>
-        <h3 class="text-gray-500 text-sm font-medium mb-1">Total Students</h3>
-        <div class="flex items-baseline justify-between">
-            <span class="text-3xl font-bold text-gray-800">{{ total_students|default:"1" }}</span>
-            <span class="text-sm text-gray-500">/ 100 max</span>
-        </div>
-    </a>
-    
-    <!-- Check-ins -->
-    <a href="{% url 'student_attendance_list' %}" class="stat-card bg-white p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-200">
-        <div class="flex items-center justify-between mb-4">
-            <div class="bg-green-100 p-3 rounded-xl">
-                <i class="fas fa-sign-in-alt text-2xl text-green-600"></i>
-            </div>
-            <span class="text-sm font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">
-                <i class="fas fa-arrow-up mr-1 text-xs"></i> +5%
-            </span>
-        </div>
-        <h3 class="text-gray-500 text-sm font-medium mb-1">Check-ins</h3>
-        <div class="flex items-baseline justify-between">
-            <span class="text-3xl font-bold text-gray-800">{{ total_check_ins|default:"1" }}</span>
-            <span class="text-sm text-gray-500">aujourd'hui</span>
-        </div>
-    </a>
-    
-    <!-- Check-outs -->
-    <a href="{% url 'student_attendance_list' %}" class="stat-card bg-white p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-200">
-        <div class="flex items-center justify-between mb-4">
-            <div class="bg-orange-100 p-3 rounded-xl">
-                <i class="fas fa-sign-out-alt text-2xl text-orange-600"></i>
-            </div>
-            <span class="text-sm font-medium text-orange-600 bg-orange-50 px-2 py-1 rounded-full">
-                <i class="fas fa-arrow-down mr-1 text-xs"></i> -2%
-            </span>
-        </div>
-        <h3 class="text-gray-500 text-sm font-medium mb-1">Check-outs</h3>
-        <div class="flex items-baseline justify-between">
-            <span class="text-3xl font-bold text-gray-800">{{ total_check_outs|default:"1" }}</span>
-            <span class="text-sm text-gray-500">aujourd'hui</span>
-        </div>
-    </a>
-    
-    <!-- Total Cameras -->
-    <a href="{% url 'camera_config_list' %}" class="stat-card bg-white p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-200">
-        <div class="flex items-center justify-between mb-4">
-            <div class="bg-purple-100 p-3 rounded-xl">
-                <i class="fas fa-camera text-2xl text-purple-600"></i>
-            </div>
-            <span class="text-sm font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">
-                <i class="fas fa-check mr-1 text-xs"></i> Actif
-            </span>
-        </div>
-        <h3 class="text-gray-500 text-sm font-medium mb-1">Total Cameras</h3>
-        <div class="flex items-baseline justify-between">
-            <span class="text-3xl font-bold text-gray-800">{{ total_cameras|default:"1" }}</span>
-            <span class="text-sm text-gray-500">en ligne</span>
-        </div>
-    </a>
-</div>
-
-<!-- Section d'activité récente -->
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    <!-- Derniers check-ins -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <div class="flex items-center justify-between mb-4">
-            <h2 class="text-lg font-semibold text-gray-800">Derniers check-ins</h2>
-            <a href="{% url 'student_attendance_list' %}" class="text-sm text-[#233853] hover:underline">Voir tout</a>
+            <h2 class="text-3xl font-bold text-gray-800">Welcome back, <span class="text-[#233853]">Admin</span></h2>
+            <p class="text-gray-500 mt-1">Here's what's happening with your attendance system today</p>
         </div>
         
-        <div class="space-y-4">
-            <!-- Exemple d'entrée (à remplacer par vos données dynamiques) -->
-            {% if recent_checkins %}
+        <!-- Carte date/heure premium -->
+        <div class="bg-gradient-to-br from-[#233853] to-[#1a2a40] rounded-2xl p-5 shadow-xl">
+            <div class="text-white">
+                <div class="flex items-center justify-between mb-2">
+                    <i class="fas fa-clock text-yellow-400"></i>
+                    <span class="text-xs font-medium text-white/60">GMT+0</span>
+                </div>
+                <div class="text-4xl font-bold mb-1" id="currentTime">10:00</div>
+                <div class="text-sm text-white/80" id="currentDate">Monday, February 11</div>
+                <div class="mt-3 flex items-center space-x-2">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistiques avec design premium -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+        <!-- Total Students Card -->
+        <div class="group relative bg-white rounded-2xl shadow-xl border border-gray-100 p-6 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">
+            <!-- Background decoration -->
+            <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#233853]/5 to-transparent rounded-full -mr-10 -mt-10 group-hover:scale-150 transition-transform duration-500"></div>
+            
+            <div class="relative">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="p-3 bg-gradient-to-br from-[#233853] to-[#2c4464] rounded-xl shadow-lg">
+                        <i class="fas fa-user-graduate text-2xl text-white"></i>
+                    </div>
+                    <div class="flex items-center space-x-1 bg-green-50 px-3 py-1.5 rounded-full">
+                        <i class="fas fa-arrow-up text-xs text-green-600"></i>
+                        <span class="text-sm font-semibold text-green-600">+12%</span>
+                    </div>
+                </div>
+                
+                <h3 class="text-gray-500 text-sm font-medium mb-1">Total Students</h3>
+                <div class="flex items-baseline justify-between">
+                    <span class="text-4xl font-bold text-gray-800">{{ total_students|default:"248" }}</span>
+                    <span class="text-sm text-gray-400">/ 500</span>
+                </div>
+                
+                <!-- Progress bar -->
+                <div class="mt-4 w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                    <div class="h-full bg-gradient-to-r from-[#233853] to-[#4a6b9c] rounded-full" style="width: 49.6%"></div>
+                </div>
+                <p class="text-xs text-gray-400 mt-2">49.6% of capacity</p>
+            </div>
+        </div>
+
+        <!-- Check-ins Today Card -->
+        <div class="group relative bg-white rounded-2xl shadow-xl border border-gray-100 p-6 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-green-500/5 to-transparent rounded-full -mr-10 -mt-10 group-hover:scale-150 transition-transform duration-500"></div>
+            
+            <div class="relative">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="p-3 bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-lg">
+                        <i class="fas fa-sign-in-alt text-2xl text-white"></i>
+                    </div>
+                    <div class="flex items-center space-x-1 bg-green-50 px-3 py-1.5 rounded-full">
+                        <i class="fas fa-arrow-up text-xs text-green-600"></i>
+                        <span class="text-sm font-semibold text-green-600">+5%</span>
+                    </div>
+                </div>
+                
+                <h3 class="text-gray-500 text-sm font-medium mb-1">Check-ins Today</h3>
+                <div class="flex items-baseline justify-between">
+                    <span class="text-4xl font-bold text-gray-800">{{ today_checkins|default:"156" }}</span>
+                    <span class="text-sm text-gray-400">students</span>
+                </div>
+                
+                <!-- Mini graphique sparkline -->
+                <div class="mt-4 flex items-end h-8 space-x-1">
+                    <div class="w-2 bg-green-200 rounded-t" style="height: 12px"></div>
+                    <div class="w-2 bg-green-300 rounded-t" style="height: 18px"></div>
+                    <div class="w-2 bg-green-400 rounded-t" style="height: 24px"></div>
+                    <div class="w-2 bg-green-500 rounded-t" style="height: 32px"></div>
+                    <div class="w-2 bg-green-400 rounded-t" style="height: 28px"></div>
+                    <div class="w-2 bg-green-300 rounded-t" style="height: 20px"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Check-outs Today Card -->
+        <div class="group relative bg-white rounded-2xl shadow-xl border border-gray-100 p-6 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-orange-500/5 to-transparent rounded-full -mr-10 -mt-10 group-hover:scale-150 transition-transform duration-500"></div>
+            
+            <div class="relative">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="p-3 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl shadow-lg">
+                        <i class="fas fa-sign-out-alt text-2xl text-white"></i>
+                    </div>
+                    <div class="flex items-center space-x-1 bg-orange-50 px-3 py-1.5 rounded-full">
+                        <i class="fas fa-arrow-down text-xs text-orange-600"></i>
+                        <span class="text-sm font-semibold text-orange-600">-2%</span>
+                    </div>
+                </div>
+                
+                <h3 class="text-gray-500 text-sm font-medium mb-1">Check-outs Today</h3>
+                <div class="flex items-baseline justify-between">
+                    <span class="text-4xl font-bold text-gray-800">{{ today_checkouts|default:"142" }}</span>
+                    <span class="text-sm text-gray-400">students</span>
+                </div>
+                
+                <!-- Icône de tendance -->
+                <div class="mt-4 flex items-center space-x-2">
+                    <i class="fas fa-chart-line text-orange-400"></i>
+                    <span class="text-xs text-gray-400">14 students still in class</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Cameras Card -->
+        <div class="group relative bg-white rounded-2xl shadow-xl border border-gray-100 p-6 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-500/5 to-transparent rounded-full -mr-10 -mt-10 group-hover:scale-150 transition-transform duration-500"></div>
+            
+            <div class="relative">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="p-3 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-lg">
+                        <i class="fas fa-camera text-2xl text-white"></i>
+                    </div>
+                    <div class="flex items-center space-x-1 bg-green-50 px-3 py-1.5 rounded-full">
+                        <i class="fas fa-circle text-xs text-green-500 animate-pulse"></i>
+                        <span class="text-sm font-semibold text-green-600">Online</span>
+                    </div>
+                </div>
+                
+                <h3 class="text-gray-500 text-sm font-medium mb-1">Active Cameras</h3>
+                <div class="flex items-baseline justify-between">
+                    <span class="text-4xl font-bold text-gray-800">{{ active_cameras|default:"3" }}</span>
+                    <span class="text-sm text-gray-400">devices</span>
+                </div>
+                
+                <!-- Liste des caméras -->
+                <div class="mt-4 space-y-2">
+                    <div class="flex items-center justify-between text-xs">
+                        <div class="flex items-center">
+                            <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                            <span class="text-gray-600">Main Entrance</span>
+                        </div>
+                        <span class="text-green-600">Active</span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs">
+                        <div class="flex items-center">
+                            <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                            <span class="text-gray-600">Classroom A</span>
+                        </div>
+                        <span class="text-green-600">Active</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section principale premium -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+        <!-- Graphique avancé -->
+        <div class="lg:col-span-2 bg-white rounded-2xl shadow-xl border border-gray-100 p-6">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800">Attendance Overview</h3>
+                    <p class="text-sm text-gray-500">Weekly attendance statistics</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button class="px-3 py-1.5 bg-[#233853] text-white text-sm rounded-lg hover:bg-[#2c4464] transition-colors">Week</button>
+                    <button class="px-3 py-1.5 text-gray-600 hover:bg-gray-100 text-sm rounded-lg transition-colors">Month</button>
+                    <button class="px-3 py-1.5 text-gray-600 hover:bg-gray-100 text-sm rounded-lg transition-colors">Year</button>
+                </div>
+            </div>
+            
+            <!-- Graphique interactif -->
+            <div class="relative h-64 mb-4">
+                <!-- Lignes de grille -->
+                <div class="absolute inset-0 flex flex-col justify-between">
+                    <div class="border-b border-gray-100 w-full h-0"></div>
+                    <div class="border-b border-gray-100 w-full h-0"></div>
+                    <div class="border-b border-gray-100 w-full h-0"></div>
+                    <div class="border-b border-gray-100 w-full h-0"></div>
+                </div>
+                
+                <!-- Barres du graphique -->
+                <div class="absolute inset-0 flex items-end justify-around pb-2">
+                    <div class="group relative w-12">
+                        <div class="bg-gradient-to-t from-[#233853] to-[#4a6b9c] rounded-t-lg transition-all duration-300 group-hover:from-[#2c4464] group-hover:to-[#5a7bad]" style="height: 120px"></div>
+                        <div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">85% (136 students)</div>
+                        <span class="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs text-gray-500">Mon</span>
+                    </div>
+                    <div class="group relative w-12">
+                        <div class="bg-gradient-to-t from-[#233853] to-[#4a6b9c] rounded-t-lg" style="height: 160px"></div>
+                        <div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">92% (147 students)</div>
+                        <span class="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs text-gray-500">Tue</span>
+                    </div>
+                    <div class="group relative w-12">
+                        <div class="bg-gradient-to-t from-[#233853] to-[#4a6b9c] rounded-t-lg" style="height: 100px"></div>
+                        <div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">78% (125 students)</div>
+                        <span class="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs text-gray-500">Wed</span>
+                    </div>
+                    <div class="group relative w-12">
+                        <div class="bg-gradient-to-t from-[#233853] to-[#4a6b9c] rounded-t-lg" style="height: 180px"></div>
+                        <div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">95% (152 students)</div>
+                        <span class="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs text-gray-500">Thu</span>
+                    </div>
+                    <div class="group relative w-12">
+                        <div class="bg-gradient-to-t from-[#233853] to-[#4a6b9c] rounded-t-lg" style="height: 140px"></div>
+                        <div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">88% (141 students)</div>
+                        <span class="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs text-gray-500">Fri</span>
+                    </div>
+                    <div class="group relative w-12">
+                        <div class="bg-gradient-to-t from-gray-300 to-gray-400 rounded-t-lg" style="height: 60px"></div>
+                        <div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">45% (72 students)</div>
+                        <span class="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs text-gray-500">Sat</span>
+                    </div>
+                    <div class="group relative w-12">
+                        <div class="bg-gradient-to-t from-gray-300 to-gray-400 rounded-t-lg" style="height: 30px"></div>
+                        <div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">15% (24 students)</div>
+                        <span class="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs text-gray-500">Sun</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Légende interactive -->
+            <div class="flex items-center justify-between mt-8 pt-4 border-t border-gray-100">
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 bg-[#233853] rounded-full mr-2"></div>
+                        <span class="text-sm text-gray-600">Present</span>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 bg-gray-300 rounded-full mr-2"></div>
+                        <span class="text-sm text-gray-600">Weekend</span>
+                    </div>
+                </div>
+                <div class="text-sm text-gray-500">
+                    <i class="fas fa-calendar-alt mr-1"></i> Avg: 78% attendance
+                </div>
+            </div>
+        </div>
+
+        <!-- Carte Mark Attendance Premium -->
+        <div class="bg-gradient-to-br from-[#233853] via-[#1e2f45] to-[#1a2a40] rounded-2xl shadow-2xl p-6 flex flex-col relative overflow-hidden">
+            <!-- Éléments décoratifs -->
+            <div class="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded-full -mr-10 -mt-10"></div>
+            <div class="absolute bottom-0 left-0 w-40 h-40 bg-white/5 rounded-full -ml-10 -mb-10"></div>
+            
+            <!-- Badge -->
+            <div class="relative">
+                <div class="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full mb-6">
+                    <i class="fas fa-bolt text-yellow-400 text-sm"></i>
+                    <span class="text-white text-sm font-medium">Quick Action</span>
+                </div>
+                
+                <h3 class="text-2xl font-bold text-white mb-2">Mark Attendance</h3>
+                <p class="text-white/70 text-sm mb-6">Start facial recognition to mark student attendance in real-time</p>
+                
+                <!-- Statistiques en direct -->
+                <div class="space-y-4 mb-8">
+                    <div class="flex items-center justify-between">
+                        <span class="text-white/60">Currently in class</span>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-2xl font-bold text-white">{{ currently_present|default:"124" }}</span>
+                            <span class="text-xs text-white/40">/248</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Progress circle -->
+                    <div class="relative flex justify-center">
+                        <svg class="w-24 h-24 transform -rotate-90">
+                            <circle class="text-white/10" stroke-width="4" stroke="currentColor" fill="transparent" r="45" cx="48" cy="48"/>
+                            <circle class="text-green-400" stroke-width="4" stroke="currentColor" fill="transparent" r="45" cx="48" cy="48" stroke-dasharray="283" stroke-dashoffset="141.5"/>
+                        </svg>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <span class="text-white font-bold">50%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Bouton Mark Attendance -->
+                <a href="{% url 'capture_and_recognize' %}" 
+                   class="relative group block w-full bg-white text-[#233853] px-6 py-4 rounded-xl font-semibold hover:bg-gray-50 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl">
+                    <div class="flex items-center justify-center space-x-3">
+                        <i class="fas fa-camera text-xl"></i>
+                        <span>Start Recognition</span>
+                        <i class="fas fa-arrow-right group-hover:translate-x-2 transition-transform duration-300"></i>
+                    </div>
+                    
+                    <!-- Effet de brillance -->
+                    <div class="absolute inset-0 rounded-xl overflow-hidden">
+                        <div class="absolute top-0 -inset-full h-full w-1/2 z-5 block transform -skew-x-12 bg-gradient-to-r from-transparent to-white opacity-20 group-hover:animate-shine"></div>
+                    </div>
+                </a>
+                
+                <!-- Indicateur de caméra active -->
+                <div class="flex items-center justify-center space-x-2 mt-4">
+                    <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                    <span class="text-white/60 text-xs">Camera ready • 3 devices online</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Activités récentes avec design premium -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Recent Check-ins -->
+        <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-6">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800">Recent Check-ins</h3>
+                    <p class="text-sm text-gray-500">Latest student arrivals</p>
+                </div>
+                <a href="{% url 'student_attendance_list' %}" class="text-[#233853] hover:text-[#2c4464] transition-colors text-sm font-medium flex items-center">
+                    View all
+                    <i class="fas fa-arrow-right ml-1 text-xs"></i>
+                </a>
+            </div>
+            
+            <div class="space-y-4">
                 {% for checkin in recent_checkins %}
-                <div class="flex items-center justify-between py-2 border-b border-gray-50">
+                <div class="flex items-center justify-between p-3 hover:bg-gradient-to-r hover:from-gray-50 hover:to-white rounded-xl transition-all group">
                     <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                            <i class="fas fa-user text-gray-500"></i>
+                        <div class="relative">
+                            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[#233853] to-[#2c4464] p-0.5">
+                                <div class="w-full h-full rounded-xl bg-white flex items-center justify-center">
+                                    {% if checkin.student.photo %}
+                                        <img src="{{ checkin.student.photo.url }}" class="w-full h-full rounded-xl object-cover">
+                                    {% else %}
+                                        <i class="fas fa-user text-[#233853]"></i>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
                         </div>
                         <div>
-                            <p class="font-medium text-gray-800">{{ checkin.student.name }}</p>
-                            <p class="text-sm text-gray-500">Check-in à {{ checkin.time }}</p>
+                            <p class="font-semibold text-gray-800">{{ checkin.student.name }}</p>
+                            <p class="text-xs text-gray-500">{{ checkin.student.student_class }} • ID: {{ checkin.student.matricule|default:"N/A" }}</p>
                         </div>
                     </div>
-                    <span class="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full">Présent</span>
+                    <div class="text-right">
+                        <span class="text-sm font-semibold text-green-600 bg-green-50 px-3 py-1.5 rounded-full">{{ checkin.check_in_time|date:"h:i A" }}</span>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="text-center py-8">
+                    <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <i class="fas fa-clock text-gray-400 text-xl"></i>
+                    </div>
+                    <p class="text-gray-500 text-sm">No recent check-ins</p>
                 </div>
                 {% endfor %}
-            {% else %}
-                <p class="text-gray-500 text-sm py-4 text-center">Aucun check-in récent</p>
-            {% endif %}
+            </div>
         </div>
-    </div>
-    
-    <!-- Derniers check-outs -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <div class="flex items-center justify-between mb-4">
-            <h2 class="text-lg font-semibold text-gray-800">Derniers check-outs</h2>
-            <a href="{% url 'student_attendance_list' %}" class="text-sm text-[#233853] hover:underline">Voir tout</a>
-        </div>
-        
-        <div class="space-y-4">
-            <!-- Exemple d'entrée (à remplacer par vos données dynamiques) -->
-            {% if recent_checkouts %}
+
+        <!-- Recent Check-outs -->
+        <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-6">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800">Recent Check-outs</h3>
+                    <p class="text-sm text-gray-500">Latest student departures</p>
+                </div>
+                <a href="{% url 'student_attendance_list' %}" class="text-[#233853] hover:text-[#2c4464] transition-colors text-sm font-medium flex items-center">
+                    View all
+                    <i class="fas fa-arrow-right ml-1 text-xs"></i>
+                </a>
+            </div>
+            
+            <div class="space-y-4">
                 {% for checkout in recent_checkouts %}
-                <div class="flex items-center justify-between py-2 border-b border-gray-50">
+                <div class="flex items-center justify-between p-3 hover:bg-gradient-to-r hover:from-gray-50 hover:to-white rounded-xl transition-all group">
                     <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                            <i class="fas fa-user text-gray-500"></i>
+                        <div class="relative">
+                            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 p-0.5">
+                                <div class="w-full h-full rounded-xl bg-white flex items-center justify-center">
+                                    {% if checkout.student.photo %}
+                                        <img src="{{ checkout.student.photo.url }}" class="w-full h-full rounded-xl object-cover">
+                                    {% else %}
+                                        <i class="fas fa-user text-orange-500"></i>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-orange-500 rounded-full border-2 border-white"></div>
                         </div>
                         <div>
-                            <p class="font-medium text-gray-800">{{ checkout.student.name }}</p>
-                            <p class="text-sm text-gray-500">Check-out à {{ checkout.time }}</p>
+                            <p class="font-semibold text-gray-800">{{ checkout.student.name }}</p>
+                            <p class="text-xs text-gray-500">{{ checkout.student.student_class }} • ID: {{ checkout.student.matricule|default:"N/A" }}</p>
                         </div>
                     </div>
-                    <span class="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full">Sortie</span>
+                    <div class="text-right">
+                        <span class="text-sm font-semibold text-orange-600 bg-orange-50 px-3 py-1.5 rounded-full">{{ checkout.check_out_time|date:"h:i A" }}</span>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="text-center py-8">
+                    <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <i class="fas fa-clock text-gray-400 text-xl"></i>
+                    </div>
+                    <p class="text-gray-500 text-sm">No recent check-outs</p>
                 </div>
                 {% endfor %}
-            {% else %}
-                <p class="text-gray-500 text-sm py-4 text-center">Aucun check-out récent</p>
-            {% endif %}
+            </div>
         </div>
     </div>
 </div>
 
-<!-- Section des caméras actives -->
-<div class="mt-6 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-    <div class="flex items-center justify-between mb-4">
-        <h2 class="text-lg font-semibold text-gray-800">Caméras actives</h2>
-        <a href="{% url 'camera_config_list' %}" class="text-sm text-[#233853] hover:underline">Gérer les caméras</a>
-    </div>
+<!-- Styles et animations -->
+<style>
+@keyframes shine {
+    100% {
+        left: 200%;
+    }
+}
+
+.animate-shine {
+    animation: shine 1.5s ease-out;
+}
+
+/* Animation pour les cartes */
+.hover\:shadow-2xl:hover {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* Animation pour le graphique */
+@keyframes growBar {
+    from {
+        height: 0;
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.bg-gradient-to-t {
+    animation: growBar 1s ease-out forwards;
+    transform-origin: bottom;
+}
+
+/* Animation pour le bouton */
+@keyframes pulse-glow {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+    }
+    50% {
+        box-shadow: 0 0 20px 0 rgba(255, 255, 255, 0.3);
+    }
+}
+
+.group:hover .group-hover\:scale-105 {
+    animation: pulse-glow 2s infinite;
+}
+
+/* Effet de survol sur les lignes */
+.hover\:bg-gradient-to-r:hover {
+    background-size: 200% 100%;
+    background-position: right center;
+}
+
+/* Animation pour les barres de progression */
+@keyframes slideIn {
+    from {
+        width: 0;
+    }
+}
+
+</style>
+
+<!-- Script pour l'horloge en temps réel -->
+<script>
+function updateDateTime() {
+    const now = new Date();
     
-    <div class="flex items-center space-x-4">
-        <div class="flex items-center space-x-2 bg-green-50 px-4 py-2 rounded-lg">
-            <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-            <span class="text-sm font-medium text-gray-700">Caméra 1</span>
-        </div>
-    </div>
-</div>
+    // Format de l'heure
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = hours % 12 || 12;
+    const formattedMinutes = minutes.toString().padStart(2, '0');
+    const timeString = `${formattedHours}:${formattedMinutes} ${ampm}`;
+    
+    // Format de la date
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    
+    const dayName = days[now.getDay()];
+    const monthName = months[now.getMonth()];
+    const day = now.getDate();
+    const dateString = `${dayName}, ${monthName} ${day}`;
+    
+    document.getElementById('currentTime').textContent = timeString;
+    document.getElementById('currentDate').textContent = dateString;
+}
+
+// Mettre à jour immédiatement
+updateDateTime();
+
+// Mettre à jour toutes les minutes
+setInterval(updateDateTime, 60000);
+</script>
 {% endblock %}

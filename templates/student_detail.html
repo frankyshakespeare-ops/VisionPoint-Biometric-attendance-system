@@ -1,75 +1,366 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Details</title>
-    <!-- Include any necessary CSS -->
-    <style>
-        /* Global Styles */
-        body {
-            font-family: 'Roboto', Arial, sans-serif;
-            background-color: #f9f9f9;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            max-width: 600px;
-            margin: 20px auto;
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            transition: box-shadow 0.3s ease;
-        }
-        h1 {
-            text-align: center;
-            color: #007bff;
-            margin-bottom: 20px;
-        }
-        .student-details {
-            border-top: 1px solid #eee;
-            padding-top: 20px;
-            margin-bottom: 30px;
-        }
-        .detail {
-            margin-bottom: 10px;
-            color: #555;
-        }
-        .actions {
-            margin-top: 20px;
-            text-align: center;
-        }
-        .actions a {
-            display: inline-block;
-            margin: 0 10px;
-            padding: 12px 24px;
-            background-color: #007bff;
-            color: #fff;
-            border-radius: 5px;
-            text-decoration: none;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-        .actions a:hover {
-            background-color: #0056b3;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Student Details</h1>
-        <div class="student-details">
-            <div class="detail"><strong>Name:</strong> {{ student.name }}</div>
-            <div class="detail"><strong>Email:</strong> {{ student.email }}</div>
-            <div class="detail"><strong>Phone Number:</strong> {{ student.phone_number }}</div>
-            <div class="detail"><strong>Class:</strong> {{ student.student_class }}</div>
-            <div class="detail"><strong>Authorized:</strong> {% if student.authorized %} Yes {% else %} No {% endif %}</div>
-        </div>
-        <div class="actions">
-            <a href="{% url 'student-list' %}">Back to List</a>
-            <a href="{% url 'student-authorize' pk=student.pk %}">Authorize</a>
-            <a href="{% url 'student-delete' pk=student.pk %}">Delete</a> <!-- Add this line -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Student Details{% endblock %}
+
+{% block page_title %}Student Details{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <!-- En-tête avec fil d'Ariane -->
+    <div class="mb-6">
+        <div class="flex items-center text-sm text-gray-500 mb-2">
+            <a href="{% url 'home' %}" class="hover:text-[#233853] transition-colors">
+                <i class="fas fa-home mr-1"></i> Home
+            </a>
+            <i class="fas fa-chevron-right mx-2 text-xs"></i>
+            <a href="{% url 'student-list' %}" class="hover:text-[#233853] transition-colors">Students</a>
+            <i class="fas fa-chevron-right mx-2 text-xs"></i>
+            <span class="text-[#233853] font-medium">{{ student.name }}</span>
         </div>
     </div>
-</body>
-</html>
+
+    <!-- Carte principale -->
+    <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+        <!-- En-tête de la carte avec photo -->
+        <div class="bg-gradient-to-r from-[#233853] to-[#2c4464] px-8 py-6">
+            <div class="flex items-center">
+                <div class="relative">
+                    {% if student.photo %}
+                        <img src="{{ student.photo.url }}" 
+                             class="w-24 h-24 rounded-xl object-cover border-4 border-white shadow-lg"
+                             alt="{{ student.name }}">
+                    {% else %}
+                        <div class="w-24 h-24 rounded-xl bg-white/20 flex items-center justify-center border-4 border-white">
+                            <i class="fas fa-user text-white text-4xl"></i>
+                        </div>
+                    {% endif %}
+                    <div class="absolute -bottom-2 -right-2 w-6 h-6 {% if student.authorized %}bg-green-500{% else %}bg-yellow-500{% endif %} rounded-full border-2 border-white"></div>
+                </div>
+                <div class="ml-6">
+                    <h2 class="text-2xl font-bold text-white">{{ student.name }}</h2>
+                    <p class="text-white/80 text-sm mt-1 flex items-center">
+                        <i class="fas fa-id-card mr-2"></i>
+                        ID: {{ student.matricule|default:"N/A" }}
+                        <span class="mx-2">•</span>
+                        <i class="fas fa-calendar-alt mr-2"></i>
+                        Joined: {{ student.created_at|date:"M d, Y"|default:"N/A" }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Corps de la carte -->
+        <div class="p-8">
+            <!-- Statut d'autorisation -->
+            <div class="mb-8 flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                <div class="flex items-center">
+                    {% if student.authorized %}
+                        <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                            <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <span class="text-sm font-medium text-gray-500 block">Authorization Status</span>
+                            <span class="text-base font-semibold text-green-600">Authorized</span>
+                        </div>
+                    {% else %}
+                        <div class="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center mr-3">
+                            <i class="fas fa-clock text-yellow-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <span class="text-sm font-medium text-gray-500 block">Authorization Status</span>
+                            <span class="text-base font-semibold text-yellow-600">Pending Authorization</span>
+                        </div>
+                    {% endif %}
+                </div>
+                <a href="{% url 'student-authorize' pk=student.pk %}" 
+                   class="px-4 py-2 bg-[#233853] text-white rounded-lg hover:bg-[#2c4464] transition-colors duration-200 text-sm font-medium flex items-center">
+                    <i class="fas fa-edit mr-2"></i>
+                    Manage Access
+                </a>
+            </div>
+
+            <!-- Grille d'informations -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                <!-- Informations personnelles -->
+                <div class="space-y-4">
+                    <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-4 flex items-center">
+                        <i class="fas fa-user-circle text-[#233853] mr-2"></i>
+                        Personal Information
+                    </h3>
+                    
+                    <div class="bg-gray-50 rounded-lg p-4 space-y-3">
+                        <div class="flex items-start">
+                            <div class="w-8 text-gray-400">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-xs text-gray-500">Email Address</p>
+                                <p class="text-sm font-medium text-gray-800">{{ student.email }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="w-8 text-gray-400">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-xs text-gray-500">Phone Number</p>
+                                <p class="text-sm font-medium text-gray-800">{{ student.phone_number }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="w-8 text-gray-400">
+                                <i class="fas fa-calendar"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-xs text-gray-500">Date of Birth</p>
+                                <p class="text-sm font-medium text-gray-800">{{ student.date_of_birth|default:"Not provided" }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="w-8 text-gray-400">
+                                <i class="fas fa-venus-mars"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-xs text-gray-500">Gender</p>
+                                <p class="text-sm font-medium text-gray-800">{{ student.gender|default:"Not specified" }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Informations académiques -->
+                <div class="space-y-4">
+                    <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-4 flex items-center">
+                        <i class="fas fa-graduation-cap text-[#233853] mr-2"></i>
+                        Academic Information
+                    </h3>
+                    
+                    <div class="bg-gray-50 rounded-lg p-4 space-y-3">
+                        <div class="flex items-start">
+                            <div class="w-8 text-gray-400">
+                                <i class="fas fa-school"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-xs text-gray-500">Class</p>
+                                <p class="text-sm font-medium">
+                                    <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                        {% if student.student_class == 'L1' %}bg-blue-100 text-blue-800
+                                        {% elif student.student_class == 'L2' %}bg-green-100 text-green-800
+                                        {% elif student.student_class == 'L3' %}bg-yellow-100 text-yellow-800
+                                        {% elif student.student_class == 'M1' %}bg-purple-100 text-purple-800
+                                        {% elif student.student_class == 'M2' %}bg-pink-100 text-pink-800
+                                        {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                        {{ student.student_class }}
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="w-8 text-gray-400">
+                                <i class="fas fa-id-badge"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-xs text-gray-500">Matricule / Student ID</p>
+                                <p class="text-sm font-medium text-gray-800">{{ student.matricule|default:"Not assigned" }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="w-8 text-gray-400">
+                                <i class="fas fa-calendar-plus"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-xs text-gray-500">Registration Date</p>
+                                <p class="text-sm font-medium text-gray-800">{{ student.created_at|date:"F j, Y" }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="w-8 text-gray-400">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-xs text-gray-500">Last Updated</p>
+                                <p class="text-sm font-medium text-gray-800">{{ student.updated_at|date:"F j, Y"|default:"Not updated" }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section présence récente -->
+            <div class="border-t border-gray-100 pt-8 mb-8">
+                <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-4 flex items-center">
+                    <i class="fas fa-history text-[#233853] mr-2"></i>
+                    Recent Attendance
+                </h3>
+                
+                <div class="bg-gray-50 rounded-lg overflow-hidden">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Check-in</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Check-out</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duration</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            {% for attendance in recent_attendance %}
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ attendance.date }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                    <i class="fas fa-sign-in-alt text-green-500 mr-1"></i>
+                                    {{ attendance.check_in_time|date:"h:i A" }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                    {% if attendance.check_out_time %}
+                                        <i class="fas fa-sign-out-alt text-orange-500 mr-1"></i>
+                                        {{ attendance.check_out_time|date:"h:i A" }}
+                                    {% else %}
+                                        <span class="text-gray-400">Not checked out</span>
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                    {% if attendance.check_in_time and attendance.check_out_time %}
+                                        <span class="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
+                                            {{ attendance.calculate_duration }}
+                                        </span>
+                                    {% else %}
+                                        <span class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">
+                                            In progress
+                                        </span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="px-6 py-8 text-center text-gray-500">
+                                    <i class="fas fa-calendar-times text-3xl mb-2 block text-gray-400"></i>
+                                    No attendance records found
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Boutons d'action -->
+            <div class="flex flex-wrap items-center justify-between gap-4 border-t border-gray-100 pt-8">
+                <div class="flex space-x-3">
+                    <a href="{% url 'student-list' %}" 
+                       class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors duration-200 flex items-center">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        Back to List
+                    </a>
+                    
+                    <a href="{% url 'student-authorize' pk=student.pk %}" 
+                       class="px-6 py-3 bg-[#233853] text-white rounded-lg hover:bg-[#2c4464] transition-colors duration-200 flex items-center">
+                        <i class="fas fa-user-check mr-2"></i>
+                        Authorize
+                    </a>
+                </div>
+                
+                <!-- Bouton de suppression avec confirmation -->
+                <button onclick="confirmDelete()" 
+                        class="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200 flex items-center">
+                    <i class="fas fa-trash mr-2"></i>
+                    Delete Student
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistiques rapides -->
+    <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4">
+            <div class="flex items-center">
+                <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                    <i class="fas fa-calendar-check text-blue-600"></i>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500">Total Presences</p>
+                    <p class="text-xl font-bold text-gray-800">{{ total_presences|default:"0" }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4">
+            <div class="flex items-center">
+                <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                    <i class="fas fa-clock text-green-600"></i>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500">This Month</p>
+                    <p class="text-xl font-bold text-gray-800">{{ monthly_presences|default:"0" }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4">
+            <div class="flex items-center">
+                <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
+                    <i class="fas fa-star text-purple-600"></i>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500">Attendance Rate</p>
+                    <p class="text-xl font-bold text-gray-800">{{ attendance_rate|default:"0%" }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmation de suppression -->
+<div id="deleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full z-50">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-xl bg-white">
+        <div class="mt-3 text-center">
+            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+                <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+            </div>
+            <h3 class="text-lg leading-6 font-medium text-gray-900 mb-2">Delete Student</h3>
+            <div class="mt-2 px-7 py-3">
+                <p class="text-sm text-gray-500 mb-2">
+                    Are you sure you want to delete <span class="font-semibold text-gray-700">{{ student.name }}</span>?
+                </p>
+                <p class="text-xs text-red-500 mb-4">This action cannot be undone.</p>
+                
+                <div class="flex items-center justify-center space-x-4">
+                    <button onclick="closeDeleteModal()" 
+                            class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200">
+                        Cancel
+                    </button>
+                    <a href="{% url 'student-delete' pk=student.pk %}" 
+                       class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200">
+                        Delete
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function confirmDelete() {
+    document.getElementById('deleteModal').classList.remove('hidden');
+}
+
+function closeDeleteModal() {
+    document.getElementById('deleteModal').classList.add('hidden');
+}
+
+// Fermer le modal si on clique en dehors
+window.onclick = function(event) {
+    const modal = document.getElementById('deleteModal');
+    if (event.target === modal) {
+        modal.classList.add('hidden');
+    }
+}
+</script>
+{% endblock %}
